@@ -14,10 +14,10 @@
         packages.${system} = {
           default = pkgs.mkShell {
             name = "package-delivery";
-            buildInputs = [pkgs.lfe pkgs.cmark];
+            buildInputs = [pkgs.lfe pkgs.rebar3];
             shellHook = ''
   export LD_LIBRARY_PATH=$LD_LIBRARY_PATH:${pkgs.lib.makeLibraryPath[
-                                              pkgs.cmark
+                                              pkgs.rebar3
                                             ]};
   '';
           };
@@ -25,10 +25,10 @@
 
         devShell = pkgs.mkShell {
           name = "package-delivery";
-          buildInputs = [pkgs.lfe pkgs.cmark];
+          buildInputs = [pkgs.lfe pkgs.rebar3];
           shellHook = ''
   export LD_LIBRARY_PATH=$LD_LIBRARY_PATH:${pkgs.lib.makeLibraryPath[
-                                            pkgs.cmark
+                                            pkgs.rebar3
                                           ]};
   '';
         };
