@@ -1,6 +1,7 @@
 (include-lib "./destructuring-bind.lfe")
 (include-lib "./with-pattern.lfe")
-(include-lib"./defstate.lfe")
+(include-lib "./defstate.lfe")
+(include-lib "./async-sync-programs.lfe")
 
 ;; destructuring bind example
 
@@ -15,6 +16,26 @@
                         ":memory:"
                         (progn
                           (print conn)))
+
+;; async and sync calls
+
+(let ((p (spawn (lambda ()
+                  (receive
+                    ((cons from 'ping)
+                     (progn
+                       (io:format "ping~n")
+                       (async-call-process from 'pong))))))))
+ (sync-call-process p 'ping
+                    (('pong (io:format "pong~n")))))
+
+(with-process (p ((cons from 'ping)
+                  (progn
+                    (io:format "ping~n")
+                    (async-call-process from 'pong)))
+                 ((cons from 'pang)
+                  (io:format "ping~n")))
+              'ping
+              (('pong (io:format "pong~n"))))
 
 ;; define a simple state machine
 
