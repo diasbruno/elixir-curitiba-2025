@@ -12,12 +12,17 @@
 
 ;; with pattern
 
+;; with open(filename, mode)
+
 (with-sqlite-connection conn
                         ":memory:"
                         (progn
                           (print conn)))
 
 ;; async and sync calls
+
+;; (! pid data)
+;; (receive [(data handler)])
 
 (let ((p (spawn (lambda ()
                   (receive
@@ -28,14 +33,19 @@
  (sync-call-process p 'ping
                     (('pong (io:format "pong~n")))))
 
+;; hiding details...
+
 (with-process (p ((cons from 'ping)
                   (progn
                     (io:format "ping~n")
                     (async-call-process from 'pong)))
                  ((cons from 'pang)
-                  (io:format "ping~n")))
+                  (progn
+                    (io:format "pang~n")
+                    (async-call-process from 'pang))))
               'ping
-              (('pong (io:format "pong~n"))))
+              (('pong (io:format "pong~n"))
+               (else (io:format "not handling~n"))))
 
 ;; define a simple state machine
 

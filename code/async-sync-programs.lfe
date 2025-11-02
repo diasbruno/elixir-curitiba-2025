@@ -11,5 +11,4 @@
   `(let ((,(car process) (spawn (lambda ()
                                   (receive
                                     ,@(cdr process))))))
-     (sync-call-process p ,data
-                        ,receives)))
+     (sync-call-process p ,data ,receives)))
