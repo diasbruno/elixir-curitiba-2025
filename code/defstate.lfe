@@ -33,19 +33,22 @@
                                                    (list event state '(,@state-evs)))
                                         state)))))))))
                       (tuple (list) (list))
-                      transitions)))
-    `(progn
-       (defun ,(list_to_atom (lists:append (atom_to_list name) "-api")) ()
-         ',evs)
+                      transitions))
+        (api-fn-name (list_to_atom (lists:append (atom_to_list name) "-api")))
+        (states-fn-name (list_to_atom (lists:append (atom_to_list name) "-states")))
+        (events-fn-name (list_to_atom (lists:append (atom_to_list name) "-events"))))
 
-       (defun ,(list_to_atom (lists:append (atom_to_list name) "-events")) ()
+    `(progn
+       (defun ,events-fn-name ()
+         ',evs)
+       (defun ,api-fn-name ()
          ',(lists:foldl (lambda (item acc)
                           (let (((tuple state es) item))
                             (lists:append acc es)))
                         '()
                         evs))
 
-       (defun ,(list_to_atom (lists:append (atom_to_list name) "-states")) ()
+       (defun ,states-fn-name ()
          ',(lists:foldl (lambda (item acc)
                           (let (((tuple state es) item))
                             (cons state acc)))
@@ -57,5 +60,5 @@
            ,@exps
            (else (progn
                 (io:format "[error] unknown state ~p~n possible states are: ~p~n"
-                           (list state (states)))
+                           (list state (,states-fn-name)))
                 state)))))))
